@@ -1,0 +1,36 @@
+service: smssend
+
+# You can pin your service to only deploy with a specific Serverless version
+# Check out our docs for more details
+frameworkVersion: '2'
+plugins:
+  - serverless-deployment-bucket
+  - serverless-api-compression
+  - serverless-dotenv-plugin
+
+provider:
+  region: eu-central-1
+  name: aws
+  runtime: go1.x
+  lambdaHashingVersion: 20201221
+  stage: stage
+  deploymentBucket:
+      name: smmsend-serverlessdeploymentbucket-fjioxum10dvi
+
+package:
+  exclude:
+    - ./**
+  include:
+    - ./bin/**
+    - ./static/*
+
+custom:
+  contentEncoding:
+    contentCompression: 1024    
+
+functions:
+  sqs:
+    handler: bin/smssend
+    memorySize: 512
+    description: SQS Consumer for SMSAPI data
+ 
